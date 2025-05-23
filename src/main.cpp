@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+# include <sstream>
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -7,11 +8,30 @@ int main() {
   std::cerr << std::unitbuf;
 
   std::string input;
+
   while (true) {
     std::cout << "$ ";
     std::getline(std::cin, input);
-    if (input == "exit 0" ) {
-      return 0;
+
+    if (input.empty()) {
+      continue;
+    }
+    std::istringstream iss(input);
+    std::string command;
+    iss >> command;
+
+    if (command == "exit") {
+      std::string arg;
+      iss >> arg;
+      if (arg == "0") {
+        return 0;
+      }
+    }
+    else if (command == "echo") {
+      std::string arg;
+      while (iss >> arg) {
+        std::cout << arg << " ";
+      }
     }
     else {
       std::cout << input << ": command not found" << std::endl;
