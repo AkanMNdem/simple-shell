@@ -31,6 +31,7 @@ int main() {
       std::string arg;
       while (iss >> arg) {
         std::cout << arg << " ";
+        return 0;
       }
     }
     else {
