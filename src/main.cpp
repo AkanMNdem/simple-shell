@@ -10,8 +10,8 @@ int main() {
   while (true) {
     std::cout << "$ ";
     std::getline(std::cin, input);
-    if (input == "0" ) {
-      std::cout << "exit" << input << std::endl;
+    if (input == "exit 0" ) {
+      std::cout << input << std::endl;
       break;
     }
     else {
