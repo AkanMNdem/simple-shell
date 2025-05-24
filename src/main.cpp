@@ -37,6 +37,23 @@ int main() {
       }
       std::cout << output << std::endl;
     }
+    else if (command == "type") {
+      std::string arg, output;
+      iss >> arg;
+      if (arg == "echo") {
+          std::cout << "echo is a shell builtin" << std::endl;
+      }
+      else if (arg == "exit") {
+          std::cout << "exit is a shell builtin" << std::endl;
+      }
+      else if (command == "type") {
+          std::cout << "type is a shell builtin" << std::endl;
+      }
+      else {
+          std::cout << arg << ": command not found" << std::endl;
+
+      }
+    }
     else {
       std::cout << input << ": command not found" << std::endl;
     }
