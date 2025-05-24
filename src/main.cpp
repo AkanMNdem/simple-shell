@@ -52,11 +52,11 @@ int main() {
           std::istringstream iss2(path_var);
           std::string path;
           bool found = false;
-
+          iss >> arg;
           while (std::getline(iss2, path, ':')) {
             std::string full_path = path + "/" + arg;
             if (access(full_path.c_str(), X_OK) == 0) {
-              std::cout << arg << " is /bin/" << arg << std::endl;
+              std::cout << arg << " is" << full_path << std::endl;
               found = true;
               break;
             }
@@ -65,7 +65,7 @@ int main() {
           if (!found) {
             std::cout << arg << ": not found" << std::endl;
           }
-          
+
           std::cout << "type is a shell builtin" << std::endl;
 
       }
