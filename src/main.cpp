@@ -28,11 +28,14 @@ int main() {
       }
     }
     else if (command == "echo") {
-      std::string arg;
-      while (iss >> arg) {
-        std::cout << arg << " ";
-        return 0;
+      std::string word, output;
+      while (iss >> word) {
+        if (!output.empty()) {
+          output += " ";
+        }
+        output += word;
       }
+      std::cout << output << std::endl;
     }
     else {
       std::cout << input << ": command not found" << std::endl;
