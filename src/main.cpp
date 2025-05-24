@@ -38,7 +38,7 @@ int main() {
       std::cout << output << std::endl;
     }
     else if (command == "type") {
-      std::string arg, output;
+      std::string arg;
       iss >> arg;
       if (arg == "echo") {
           std::cout << "echo is a shell builtin" << std::endl;
@@ -46,7 +46,7 @@ int main() {
       else if (arg == "exit") {
           std::cout << "exit is a shell builtin" << std::endl;
       }
-      else if (command == "type") {
+      else if (arg == "type") {
           std::cout << "type is a shell builtin" << std::endl;
       }
       else {
