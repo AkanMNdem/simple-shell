@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 # include <sstream>
+#include <unistd.h>
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -47,7 +48,26 @@ int main() {
           std::cout << "exit is a shell builtin" << std::endl;
       }
       else if (arg == "type") {
+          const char *path_var = std::getenv("PATH");
+          std::istringstream iss2(path_var);
+          std::string path;
+          bool found = false;
+
+          while (std::getline(iss2, path, ':')) {
+            std::string full_path = path + "/" + arg;
+            if (access(full_path.c_str(), X_OK) == 0) {
+              std::cout << arg << " is /bin/" << arg << std::endl;
+              found = true;
+              break;
+            }
+          }
+
+          if (!found) {
+            std::cout << arg << ": not found" << std::endl;
+          }
+          
           std::cout << "type is a shell builtin" << std::endl;
+
       }
       else {
           std::cout << arg << ": not found" << std::endl;
