@@ -48,6 +48,9 @@ int main() {
           std::cout << "exit is a shell builtin" << std::endl;
       }
       else if (arg == "type") {
+        std::cout << "type is a shell builtin" << std::endl;
+      }
+      else {
           const char *path_var = std::getenv("PATH");
           std::istringstream iss2(path_var);
           std::string path;
@@ -60,17 +63,11 @@ int main() {
               found = true;
               break;
             }
-          }
 
+          }
           if (!found) {
             std::cout << arg << ": not found" << std::endl;
           }
-
-          std::cout << "type is a shell builtin" << std::endl;
-
-      }
-      else {
-          std::cout << arg << ": not found" << std::endl;
 
       }
     }
