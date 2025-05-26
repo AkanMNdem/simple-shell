@@ -79,25 +79,22 @@ int main() {
           std::cout << args[1] << " is a shell builtin" << std::endl;
       }
 
-      else {
-          std::string full_path = get_fullpath(args[1]);
-          if (full_path.empty()) {
-              std::cout << args[1] << ": not found" << std::endl;
-            }
-          
-          std::cout << args[1] << " is " << full_path << std::endl;
-          }
+      std::string full_path = get_fullpath(args[1]);
+
+      if (full_path.empty()) {
+          std::cout << args[1] << ": not found" << std::endl;
+        }
+      
+      std::cout << args[1] << " is " << full_path << std::endl;
       }
     else {
-      if (args.size() < 1)  {
-        std::cerr << args[0] << " :command not found" << std::endl;
+      if (args.size() < 2)  {
         continue;
       }
 
       std::string full_path = get_fullpath(args[0]);
 
       if (full_path.empty()) {
-        std::cerr << args[0] << " :command not found" << std::endl;
         continue;
       }
       
