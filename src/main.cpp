@@ -78,15 +78,17 @@ int main() {
       if (args[1] == "echo" || args[1] == "exit" || args[1] == "type") {
           std::cout << args[1] << " is a shell builtin" << std::endl;
       }
+      else {
+        std::string full_path = get_fullpath(args[1]);
 
-      std::string full_path = get_fullpath(args[1]);
-
-      if (full_path.empty()) {
+        if (full_path.empty()) {
+          std::cout << args[1] << ": not found " << std::endl;
+          }
+        else {
           std::cout << args[1] << " is " << full_path << std::endl;
         }
-      
-      std::cout << args[1] << ": not found " << std::endl;
       }
+    }
     else {
       if (args.size() < 2)  {
         continue;
