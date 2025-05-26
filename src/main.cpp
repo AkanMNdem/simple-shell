@@ -82,10 +82,10 @@ int main() {
       std::string full_path = get_fullpath(args[1]);
 
       if (full_path.empty()) {
-          std::cout << args[1] << ": not found" << std::endl;
+          std::cout << args[1] << " is " << full_path << std::endl;
         }
       
-      std::cout << args[1] << " is " << full_path << std::endl;
+      std::cout << args[1] << ": not found " << std::endl;
       }
     else {
       if (args.size() < 2)  {
