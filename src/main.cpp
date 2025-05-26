@@ -9,6 +9,9 @@
 
 
 std::vector<std::string> parse_args(const std::string &input) {
+    if (input.empty()) {
+        return {};
+    }
     std::vector<std::string> args;
     std::istringstream iss(input);
     std::string arg;
@@ -18,7 +21,19 @@ std::vector<std::string> parse_args(const std::string &input) {
     return args;
   }
 
-
+std::string get_fullpath(const std::string &input) {
+  const char *path_var = std::getenv("PATH");
+  std::istringstream iss(path_var);
+  std::string path;
+  std::string arg = parse_args(input)[0];
+  while (std::getline(iss, path, ':')) {
+    std::string full_path = path + "/" + arg;
+    if (access(full_path.c_str(), X_OK) == 0) {
+      return full_path;
+    }
+  }
+  return "";
+}
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -30,15 +45,13 @@ int main() {
   while (true) {
     std::cout << "$ ";
     std::getline(std::cin, input);
+    std::vector<std::string> args = parse_args(input);
 
-    if (input.empty()) {
-      continue;
+    if (args.empty()) {
+      continue; 
     }
 
-    std::vector<std::string> args = parse_args(input);
-    // std::istringstream iss(input);
     std::string command = args[0];
-    // iss >> command;
 
     if (args[0] == "exit") {
       if (args[1] == "0") {
@@ -47,6 +60,12 @@ int main() {
     }
     else if (args[0] == "echo") {
       std::string output;
+
+      if (args.size() < 2) {
+        std::cout << std::endl;
+        continue;
+      }      
+
       for (int i = 1; i < args.size(); i++) {
         if (!output.empty()) {
           output += " ";
@@ -61,60 +80,45 @@ int main() {
       }
 
       else {
-          const char *path_var = std::getenv("PATH");
-          std::istringstream iss2(path_var);
-          std::string path;
-          bool found = false;
-          std::string arg = args[1];
-          while (std::getline(iss2, path, ':')) {
-            std::string full_path = path + "/" + arg;
-            if (access(full_path.c_str(), X_OK) == 0) {
-              std::cout << args[2] << " is " << full_path << std::endl;
-              found = true;
-              break;
+          std::string full_path = get_fullpath(input);
+          if (full_path.empty()) {
+              std::cout << args[0] << ": not found" << std::endl;
             }
-          }
-          if (!found) {
-            std::cout << arg << ": not found" << std::endl;
+          
+          std::cout << args[0] << " is " << full_path << std::endl;
           }
       }
-    }
     else {
-      const char *path_var = std::getenv("PATH");
-      std::istringstream iss2(path_var);
-      std::string path;
-      bool found = false;
-      std::string arg = args[1];
+      std::string full_path = get_fullpath(input);
+      if (full_path.empty()) {
+        std::cerr << args[0] << " :command not found" << std::endl;
+        continue;
+      }
+      
+      std::vector<char*> exec_args;
+      for (std::string &a : args) {
+        exec_args.push_back(const_cast<char*>(a.c_str()));
+      }
+      exec_args.push_back(nullptr);
 
-      while (std::getline(iss2, path, ':')) {
-        std::string full_path = path + "/" + arg;
-        if (access(full_path.c_str(), X_OK) == 0) {
-          std::vector<char*> exec_args;
-          for (std::string &a : args) {
-            exec_args.push_back(const_cast<char*>(a.c_str()));
-          }
-          exec_args.push_back(nullptr);
+      pid_t pid = fork();
 
-          pid_t pid = fork();
-
-          if (pid == 0) {
-            // Child process executes the command
-            execvp(full_path.c_str(), exec_args.data());
-            std::cerr << "Error executing " << full_path << ": " << strerror(errno) << std::endl;
-            return 1;
-          }
-          else if (pid > 0){
-            // Parent process waits for the child to finish
-            int status;
-            waitpid(pid, &status, 0);
-            std::cout << "Command executed with PID: " << pid << std::endl;
-          }
-          else {
-            // Fork failed
-            std::cerr << "Fork failed: " << strerror(errno) << std::endl;
-            return 1;
-          }
-        }
+      if (pid == 0) {
+        // Child process executes the command
+        execvp(full_path.c_str(), exec_args.data());
+        std::cerr << "Error executing " << full_path << ": " << strerror(errno) << std::endl;
+        return 1;
+      }
+      else if (pid > 0){
+        // Parent process waits for the child to finish
+        int status;
+        waitpid(pid, &status, 0);
+        std::cout << "Command executed with PID: " << pid << std::endl;
+      }
+      else {
+        // Fork failed
+        std::cerr << "Fork failed: " << strerror(errno) << std::endl;
+        return 1;
       }
     }
   }
