@@ -89,13 +89,13 @@ int main() {
           }
       }
     else {
-      if (args.size() < 2)  {
-        std::cerr << args[0] << " :command not found" << std::endl;
-        continue;
-      }
+      // if (args.size() < 2)  {
+      //   std::cerr << args[0] << " :command not found" << std::endl;
+      //   continue;
+      // }
 
       std::string full_path = get_fullpath(args[1]);
-      
+
       if (full_path.empty()) {
         std::cerr << args[0] << " :command not found" << std::endl;
         continue;
