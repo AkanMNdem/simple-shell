@@ -21,11 +21,11 @@ std::vector<std::string> parse_args(const std::string &input) {
     return args;
   }
 
-std::string get_fullpath(const std::string &input) {
+std::string get_fullpath(const std::string &arguments) {
   const char *path_var = std::getenv("PATH");
   std::istringstream iss(path_var);
   std::string path;
-  std::string arg = parse_args(input)[0];
+  std::string arg = parse_args(arguments)[0];
   while (std::getline(iss, path, ':')) {
     std::string full_path = path + "/" + arg;
     if (access(full_path.c_str(), X_OK) == 0) {
@@ -80,7 +80,7 @@ int main() {
       }
 
       else {
-          std::string full_path = get_fullpath(input);
+          std::string full_path = get_fullpath(args[1]);
           if (full_path.empty()) {
               std::cout << args[0] << ": not found" << std::endl;
             }
@@ -89,7 +89,13 @@ int main() {
           }
       }
     else {
-      std::string full_path = get_fullpath(input);
+      if (args.size() < 2)  {
+        std::cerr << args[0] << " :command not found" << std::endl;
+        continue;
+      }
+
+      std::string full_path = get_fullpath(args[1]);
+      
       if (full_path.empty()) {
         std::cerr << args[0] << " :command not found" << std::endl;
         continue;
