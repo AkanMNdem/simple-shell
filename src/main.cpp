@@ -113,7 +113,6 @@ int main() {
         // Parent process waits for the child to finish
         int status;
         waitpid(pid, &status, 0);
-        std::cout << "$ " << std::endl;
       }
       else {
         // Fork failed
