@@ -89,18 +89,15 @@ int main() {
         }
       }
     }
-    else {
+    else  {
       if (args.size() < 2)  {
         continue;
       }
 
       std::string full_path = get_fullpath(args[0]);
 
-      if (full_path.empty()) {
-        continue;
-      }
-      
-      std::vector<char*> exec_args;
+      if (!full_path.empty()) {
+        std::vector<char*> exec_args;
       for (std::string &a : args) {
         exec_args.push_back(const_cast<char*>(a.c_str()));
       }
@@ -123,6 +120,11 @@ int main() {
         // Fork failed
         std::cerr << "Fork failed: " << strerror(errno) << std::endl;
         return 1;
+      }
+      }
+      else {
+        std::cerr << args[0] << ": command not found" << std::endl;
+        continue;
       }
     }
   }
