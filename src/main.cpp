@@ -98,34 +98,34 @@ int main() {
 
       if (!full_path.empty()) {
         std::vector<char*> exec_args;
-      for (std::string &a : args) {
-        exec_args.push_back(const_cast<char*>(a.c_str()));
-      }
-      exec_args.push_back(nullptr);
+        for (std::string &a : args) {
+          exec_args.push_back(const_cast<char*>(a.c_str()));
+        }
+        exec_args.push_back(nullptr);
 
-      pid_t pid = fork();
+        pid_t pid = fork();
 
-      if (pid == 0) {
-        // Child process executes the command
-        execvp(full_path.c_str(), exec_args.data());
-        std::cerr << "Error executing " << full_path << ": " << strerror(errno) << std::endl;
-        return 1;
-      }
-      else if (pid > 0){
-        // Parent process waits for the child to finish
-        int status;
-        waitpid(pid, &status, 0);
-      }
-      else {
-        // Fork failed
-        std::cerr << "Fork failed: " << strerror(errno) << std::endl;
-        return 1;
-      }
-      }
-      else {
-        std::cerr << args[0] << ": command not found" << std::endl;
-        continue;
-      }
+        if (pid == 0) {
+          // Child process executes the command
+          execvp(full_path.c_str(), exec_args.data());
+          std::cerr << "Error executing " << full_path << ": " << strerror(errno) << std::endl;
+          return 1;
+        }
+        else if (pid > 0){
+          // Parent process waits for the child to finish
+          int status;
+          waitpid(pid, &status, 0);
+        }
+        else {
+          // Fork failed
+          std::cerr << "Fork failed: " << strerror(errno) << std::endl;
+          return 1;
+        }
+        }
+        else {
+          std::cerr << args[0] << ": command not found" << std::endl;
+          continue;
+        }
     }
   }
   return 0;
