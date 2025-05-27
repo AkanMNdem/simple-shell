@@ -90,9 +90,9 @@ int main() {
       }
     }
     else  {
-      if (args.size() < 2)  {
-        continue;
-      }
+      // if (args.size() < 2)  {
+      //   continue;
+      // }
 
       std::string full_path = get_fullpath(args[0]);
 
