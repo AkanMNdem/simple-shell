@@ -84,7 +84,7 @@ int main() {
       }
     }
     else if (args[0] == "type") {
-      if (args[1] == "echo" || args[1] == "exit" || args[1] == "type") {
+      if (args[1] == "echo" || args[1] == "exit" || args[1] == "type" || args[1] == "pwd") {
           std::cout << args[1] << " is a shell builtin" << std::endl;
       }
       else {
