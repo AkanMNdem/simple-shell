@@ -74,6 +74,15 @@ int main() {
       }
       std::cout << output << std::endl;
     }
+    else if (args[0] == "pwd"){
+      char cwd[1024];
+      if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+        std::cout << cwd << std::endl;
+      }
+      else {
+        std::cerr << "Error getting current directory: " << strerror(errno) << std::endl;
+      }
+    }
     else if (args[0] == "type") {
       if (args[1] == "echo" || args[1] == "exit" || args[1] == "type") {
           std::cout << args[1] << " is a shell builtin" << std::endl;
