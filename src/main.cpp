@@ -75,16 +75,26 @@ int main() {
       std::cout << output << std::endl;
     }
     else if (args[0] == "pwd"){
-      char cwd[1024];
-      if (getcwd(cwd, sizeof(cwd)) != nullptr) {
-        std::cout << cwd << std::endl;
+      char cwd_buffer[1024];
+      if (getcwd(cwd_buffer, sizeof(cwd_buffer)) != nullptr) {
+        std::cout << cwd_buffer << std::endl;
       }
       else {
         std::cerr << "Error getting current directory: " << strerror(errno) << std::endl;
       }
     }
+    else if (args[0] == "cd") {
+      if (args.size() < 2) {
+        std::cerr << "cd: missing argument" << std::endl;
+        continue;
+      }
+
+      if (chdir(args[1].c_str()) != 0) {
+        std::cerr << "cd: " << args[1] << ": No such file or directory exists" << std::endl;
+      }
+    }
     else if (args[0] == "type") {
-      if (args[1] == "echo" || args[1] == "exit" || args[1] == "type" || args[1] == "pwd") {
+      if (args[1] == "echo" || args[1] == "exit" || args[1] == "type" || args[1] == "pwd" || args[1] == "cd") {
           std::cout << args[1] << " is a shell builtin" << std::endl;
       }
       else {
@@ -99,10 +109,6 @@ int main() {
       }
     }
     else  {
-      // if (args.size() < 2)  {
-      //   continue;
-      // }
-
       std::string full_path = get_fullpath(args[0]);
 
       if (!full_path.empty()) {
